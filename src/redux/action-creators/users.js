@@ -1,4 +1,9 @@
 import axios from 'axios';
+require('dotenv').config()
+
+const apiConection = process.env.REACT_APP_API_CONNECT;
+// const apiConection = "https://projekt-backend.herokuapp.com";
+console.log(apiConection);
 
 const setUserListStart = () => {
   return {
@@ -21,11 +26,11 @@ const setUserListError = err => {
     payload: { error: err }
   };
 };
-
 export const setUserList = () => dispatch => {
+  
   dispatch(setUserListStart());
   axios
-    .get('http://localhost:3000/api/users')
+    .get(apiConection + "/api/users")
     .then(res => dispatch(setUserListSuccess(res.data)))
     .catch(err => dispatch(setUserListError(err)));
 };
@@ -59,7 +64,7 @@ export const createUser = userData => dispatch => {
     }
   };
   axios
-    .post('http://localhost:3000/api/users', userData, config)
+    .post(`${apiConection}/api/users`, userData, config)
     .then(res => dispatch(createUserSuccess(res.data)))
     .catch(err => dispatch(createUserError(err)));
 };
@@ -109,7 +114,7 @@ export const editUser = (userData, history, initEdit) => dispatch => {
     }
   };
   axios
-    .put(`http://localhost:3000/api/users${userData.id}`, userData, config)
+    .put(`${apiConection}/api/users${userData.id}`, userData, config)
     .then(res => {
       dispatch(editUserSuccess(res.data));
       history.push('/');
@@ -157,7 +162,7 @@ const deleteUserError = err => {
 export const deleteUser = id => dispatch => {
   dispatch(deleteUserStart());
   axios
-    .delete(`http://localhost:3000/api/users${id}`)
+    .delete(`${apiConection}/api/users${id}`)
     .then(() => {
       dispatch(deleteUserSuccess());
       dispatch(setUserList());
@@ -190,7 +195,7 @@ const getUserError = err => {
 export const getUser = (id, setUserData) => dispatch => {
   dispatch(getUserStart());
   axios
-    .get(`http://localhost:3000/api/users${id}`)
+    .get(`${apiConection}/api/users${id}`)
     .then(res => {
       const { firstName, lastName, sex, age, jobTitle, image } = res.data;
       const userData = { firstName, lastName, sex, age, jobTitle, image };
